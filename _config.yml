@@ -10,7 +10,7 @@ version:          1.0
 gitbook_version:  3.2.3
 
 url:              'https://jar199.github.io'
-baseurl:          '/cat-1' #'/jekyll-gitbook'
+baseurl:          #'/cat-1' #'/jekyll-gitbook'
 rss:              RSS
 
 # bootstrap: use the remote theme for the site itself
