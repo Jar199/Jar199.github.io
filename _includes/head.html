@@ -1,70 +1,99 @@
-<meta charset="UTF-8">
-<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<!-- The Head -->
 
-{%- if page.title -%}
-    <title>{{ page.title | escape }} · {{ site.title | escape }}</title>
-{%- else -%}
-    <title>{{ site.title | escape }}</title>
-{%- endif -%}
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f7f7f7">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1b1b1e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta
+    name="viewport"
+    content="width=device-width, user-scalable=no initial-scale=1, shrink-to-fit=no, viewport-fit=cover"
+  >
 
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="description" content="{{site.description}}">
+  {% capture seo_tags %}
+    {% seo title=false %}
+  {% endcapture %}
 
-{%- if site.gitbook_version -%}
-    <meta name="generator" content="Jekyll (using style of GitBook {{ site.gitbook_version | escape }})">
-{%- else -%}
-    <meta name="generator" content="Jekyll (using style of GitBook)">
-{%- endif -%}
+  {% if page.image %}
+    {% assign img = page.image.path | default: page.image %}
 
-{%- if site.author -%}
-    <meta name="author" content="{{ site.author | escape }}">
-{%- endif -%}
+    {% unless img contains '://' %}
+      {% assign img_path = page.img_path | append: '/' | append: img | replace: '//', '/' %}
+      {% capture target %}"{{ img | absolute_url }}"{% endcapture %}
 
-<link rel="stylesheet" href="{{site.baseurl}}/assets/gitbook/style.css">
-<link rel="stylesheet" href="{{site.baseurl}}/assets/gitbook/gitbook-plugin-fontsettings/website.css">
-<link rel="stylesheet" href="{{site.baseurl}}/assets/gitbook/gitbook-plugin-search-pro/search.css">
-<link rel="stylesheet" href="{{site.baseurl}}/assets/gitbook/gitbook-plugin-back-to-top-button/plugin.css">
+      {% if site.img_cdn contains '//' %}
+        <!-- it's a cross-origin URL -->
+        {% capture replacement %}"{{ site.img_cdn }}{{ img_path }}"{% endcapture %}
+      {% else %}
+        <!-- it's a local file path -->
+        {%- capture replacement -%}
+          "{{ site.img_cdn | append: '/' | append: img_path | replace: '//', '/' | absolute_url }}"
+        {%- endcapture -%}
+      {% endif %}
 
-<link rel="stylesheet" href="{{site.baseurl}}/assets/gitbook/rouge/{{ site.syntax_highlighter_style | default: 'colorful' }}.css">
+      {% assign seo_tags = seo_tags | replace: target, replacement %}
+    {% endunless %}
+  {% endif %}
 
-<link rel="stylesheet" href="{{site.baseurl}}/assets/gitbook/custom.css">
-<link rel="stylesheet" href="{{site.baseurl}}/assets/gitbook/custom-local.css">
+  {{ seo_tags }}
 
-<meta name="HandheldFriendly" content="true"/>
-<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
-<link rel="apple-touch-icon-precomposed" sizes="152x152" href="{{site.baseurl}}/assets/gitbook/images/apple-touch-icon-precomposed-152.png">
-<link rel="shortcut icon" href="{{site.baseurl}}/{{site.favicon_path}}" type="image/x-icon">
+  <title>
+    {%- unless page.layout == 'home' -%}
+      {{ page.title | append: ' | ' }}
+    {%- endunless -%}
+    {{ site.title }}
+  </title>
 
-{% if site.extra_css %}
-    {%- for extra_css in site.extra_css -%}
-        {%- assign starts_with = extra_css | slice: 0,4 -%}
-        {% if starts_with == "http" %}
-<link rel="stylesheet" href="{{ extra_css }}">
-        {%- else -%}
-<link rel="stylesheet" href="{{site.baseurl}}/{{ extra_css }}">
-        {%- endif -%}
-    {%- endfor -%}
-{% endif %}
+  {% include_cached favicons.html %}
 
-{% if site.extra_header_js %}
-    {%- for extra_js in site.extra_header_js -%}
-        {%- assign starts_with = extra_js | slice: 0,4  -%}
-        {% if starts_with == "http" %}
-<script src="{{ extra_js }}"></script>
-        {%- else -%}
-<script src="{{site.baseurl}}/{{ extra_js }}"></script>
-        {%- endif -%}
-    {%- endfor -%}
-{% endif %}
+  {% if site.resources.ignore_env != jekyll.environment and site.resources.self_hosted %}
+    <link href="{{ site.data.origin[type].webfonts | relative_url }}" rel="stylesheet">
 
-{%- if site.tracker -%}
-    <!-- trackers -->
+  {% else %}
+    {% for cdn in site.data.origin[type].cdns %}
+      <link rel="preconnect" href="{{ cdn.url }}" {{ cdn.args }}>
+      <link rel="dns-prefetch" href="{{ cdn.url }}" {{ cdn.args }}>
+    {% endfor %}
 
-    {%- if site.tracker.application_insights -%}
-        <!-- application insights -->
-        {%- include application-insights.html -%}
-    {%- endif -%}
+    <link rel="stylesheet" href="{{ site.data.origin[type].webfonts | relative_url }}">
+  {% endif %}
 
-{%- endif -%}
+  <!-- GA -->
+  {% if jekyll.environment == 'production' and site.google_analytics.id != empty and site.google_analytics.id %}
+    <link rel="preconnect" href="https://www.google-analytics.com" crossorigin="use-credentials">
+    <link rel="dns-prefetch" href="https://www.google-analytics.com">
+
+    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin="anonymous">
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+  {% endif %}
+
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="{{ site.data.origin[type].bootstrap.css | relative_url}}">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{{ site.data.origin[type].fontawesome.css | relative_url }}">
+
+  <link rel="stylesheet" href="{{ '/assets/css/:THEME.css' | replace: ':THEME', site.theme | relative_url }}">
+
+  {% if site.toc and page.toc %}
+    <link rel="stylesheet" href="{{ site.data.origin[type].toc.css | relative_url }}">
+  {% endif %}
+
+  {% if page.layout == 'post' or page.layout == 'page' or page.layout == 'home' %}
+    <link rel="stylesheet" href="{{ site.data.origin[type]['lazy-polyfill'].css | relative_url }}">
+  {% endif %}
+
+  {% if page.layout == 'page' or page.layout == 'post' %}
+    <!-- Manific Popup -->
+    <link rel="stylesheet" href="{{ site.data.origin[type].magnific-popup.css | relative_url }}">
+  {% endif %}
+
+  <!-- JavaScript -->
+
+  {% unless site.theme_mode %}
+    {% include mode-toggle.html %}
+  {% endunless %}
+
+  {% include metadata-hook.html %}
+</head>
