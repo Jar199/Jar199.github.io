@@ -1,8 +1,8 @@
 ---
 title: Siamese Neural Networks for One-shot Image Recognition
 #author: cotes
-date: 2023-08-18 16:51:00 +0900
-categories: [Blogging, Demo]
+date: 2023-08-18 16:51:00 +0800
+categories: [Blogging, Demo, Demo1]
 tags: [meta-learning, paper-review]
 pin: true
 math: true
@@ -10,11 +10,11 @@ mermaid: true
 ---
 
 # Introduction
-df
+
 > [!note] 1️⃣ one-shot learning이란?
-> - test 데이터에 대한 예측을 하기 전에, 각 가능한 class당 **하나**의 example만 관찰할 수 있다는 제한 하에 분류를 할 수 있도록 모델을 학습하는 방법.
-> - 학습에 사용되지 않은 클래스 당 하나의 이미지가 주어졌을 때 올바르게 해당 클래스에 대해 prediction할 수 있는 학습 방법
-> - zero-shot learning: target class에 대한 이미지를 보지 않고 학습 (학습할 때 사용되지 않은 class의 데이터로 test하는 것)
+- test 데이터에 대한 예측을 하기 전에, 각 가능한 class당 **하나**의 example만 관찰할 수 있다는 제한 하에 분류를 할 수 있도록 모델을 학습하는 방법.
+- 학습에 사용되지 않은 클래스 당 하나의 이미지가 주어졌을 때 올바르게 해당 클래스에 대해 prediction할 수 있는 학습 방법
+- zero-shot learning: target class에 대한 이미지를 보지 않고 학습 (학습할 때 사용되지 않은 class의 데이터로 test하는 것)
 
 
 이 논문에서 소개하는 방법은 siamese neural networks를 사용하여 supervised metric-based 접근법을 통해 image representation하는 것이다. 이 방법을 통해 다시 학습하지 않고 모델의 feature를 다시 사용하여 one-shot learning를 구현할 수 있다.
