@@ -2,7 +2,7 @@
 title: Siamese Neural Networks for One-shot Image Recognition
 #author: cotes
 date: 2023-08-18 16:51:00 +0900
-categories: [Blogging, Demo, Demo1]
+categories: [Blogging, Demo]
 tags: [meta-learning, paper-review]
 pin: true
 math: true
