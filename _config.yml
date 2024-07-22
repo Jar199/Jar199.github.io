@@ -14,7 +14,7 @@ timezone: Asia/Seoul
 # jekyll-seo-tag settings › https://github.com/jekyll/jekyll-seo-tag/blob/master/docs/usage.md
 # ↓ --------------------------
 
-title: JustMajor # the main title
+title: 전공할 시간 # the main title
 
 #tagline: # it will display as the sub-title
 
@@ -185,6 +185,7 @@ jekyll-archives:
   enabled: [categories, tags]
   layouts:
     category: category
+
     tag: tag
   permalinks:
     tag: /tags/:name/
